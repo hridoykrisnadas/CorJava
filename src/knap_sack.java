@@ -1,26 +1,35 @@
 public class knap_sack {
     public static void main(String[] args) {
-        int[] weight = {10, 20, 30};
-        int[] profit = {50, 60, 70};
-        int capacity = 50;
+        int[] profit = {0, 16, 25, 60};
+        int[] weight = {0, 2, 4, 8};
         int n = profit.length;
-        int a = knapSack(capacity, weight, profit, n);
-        System.out.println("Result: " + a);
-    }
-    public static int knapSack(int capacity, int[] weight, int[] profit, int n) {
-        if (capacity == 0 || n == 0) {
-            return 0;
+        int capacity = 12;
+        int[][] result = new int[n][capacity + 1];
+
+        for (int i = 0; i <= capacity; i++) {
+            result[0][i] = 0;
         }
-        if (weight[n - 1] > capacity) {
-            return knapSack(capacity, weight, profit, n - 1);
-        } else {
-            return max(
-                    profit[n - 1] + knapSack(capacity - weight[n - 1], weight, profit, n - 1),
-                    knapSack(capacity, weight, profit, n - 1)
-            );
+        for (int i = 0; i < n; i++) {
+            result[i][0] = 0;
         }
-    }
-    public static int max(int a, int b) {
-        return Math.max(a, b);
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j <= capacity; j++) {
+                if (weight[i] > j) {
+                    result[i][j] = result[i - 1][j];
+                } else {
+                    result[i][j] = Math.max(profit[i] + result[i - 1][j - weight[i]], result[i - 1][j]);
+                }
+            }
+        }
+
+        System.out.println("Result: " + result[n - 1][capacity]);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < capacity + 1; j++) {
+                System.out.print(result[i][j] + "\t");
+            }
+            System.out.println();
+        }
+
     }
 }
